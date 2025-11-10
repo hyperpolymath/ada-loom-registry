@@ -1,0 +1,32 @@
+cabal-version: 2.2
+name:          spindle
+version:       0.1.0.0
+description:   Please see the README on GitHub at <https://github.com/githubuser/spindle#readme>
+homepage:      https://github.com/githubuser/spindle#readme
+bug-reports:   https://github.com/githubuser/spindle/issues
+author:        Author name here
+maintainer:    example@example.com
+copyright:     2024 Author name here
+license:       BSD-3-Clause
+license-file:  LICENSE
+build-type:    Simple
+extra-source-files:
+    README.md
+    CHANGLOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/spindle
+
+executable spindle
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  default-language: Haskell2010
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5,
+      text,
+      hnickel,
+      aeson,
+      bytestring
