@@ -1,0 +1,36 @@
+# Haskell / Cabal
+dist/
+dist-newstyle/
+cabal-dev/
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.stack-work/
+*.hi
+*.o
+
+# GHC
+.ghc.environment.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib

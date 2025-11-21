@@ -1,0 +1,14 @@
+Palimpsest License v0.8
+
+This license applies to software emphasizing audit-grade transparency,
+consent-awareness, and provenance tracking.
+
+For full Palimpsest License v0.8 terms, see:
+https://gitlab.com/hyperpolymath/palimpsest-license
+
+Key principles:
+- Audit-grade transparency
+- Consent-first design
+- Provenance tracking
+- Attribution preservation
+- Derivative work transparency

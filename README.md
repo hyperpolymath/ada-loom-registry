@@ -1,0 +1,59 @@
+# Spindle - Nickel Configuration Parser
+
+**Note:** This directory is named `ada-loom-registry` but contains a Haskell project called "Spindle" - **not an Ada project**.
+
+## What is Spindle?
+
+A Haskell-based tool for parsing and evaluating Nickel configuration files. It reads `.ncl` files, evaluates them, and converts them to Haskell types via JSON.
+
+## Technology Stack
+
+- **Language:** Haskell (GHC 9.12.2)
+- **Build System:** Cabal 2.2
+- **Key Dependencies:**
+  - `hnickel` - Nickel language integration
+  - `aeson` - JSON parsing
+  - `text` - Text handling
+  - `bytestring` - Binary data
+
+## Usage
+
+```bash
+cabal build
+cabal run spindle -- path/to/config.ncl
+```
+
+## Configuration
+
+- `config.ncl` - Nickel configuration
+- `config.toml` - TOML configuration
+- `.gitlab-ci.yml` - CI/CD pipeline
+
+## Purpose
+
+Processes Nickel configuration files to extract structured data (name, version) for use in Haskell applications.
+
+## Status
+
+- Version: 0.1.0.0
+- License: BSD-3-Clause
+- First version (see CHANGELOG.md)
+
+## Development
+
+The project appears to be in early development:
+- Placeholder author/maintainer information
+- GitHub URLs point to example repository
+- Minimal changelog entry
+
+## Recommendation
+
+**This project should be renamed** to reflect its actual purpose:
+- Current name: `ada-loom-registry` (misleading - not Ada, not a registry)
+- Suggested names:
+  - `spindle-nickel-parser`
+  - `nickel-config-tools`
+  - `spindle-haskell`
+
+---
+*Documentation added: 2025-11-20 during consolidation review*
