@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 name: Haskell CI
 
 on:
@@ -6,23 +7,23 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
+permissions: read-all
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-haskell@v1
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    - uses: haskell-actions/setup@ec49483bfc012387b227434aba94f59a6ecd0900 # v2.7.5
       with:
-        ghc-version: '8.10.3'
-        cabal-version: '3.2'
+        ghc-version: '9.4'
+        cabal-version: '3.10'
 
     - name: Cache
-      uses: actions/cache@v5
+      uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
       env:
         cache-name: cache-cabal
       with:
