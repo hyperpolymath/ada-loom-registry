@@ -1,59 +1,352 @@
-= Spindle - Nickel Configuration Parser
+// SPDX-License-Identifier: BSD-3-Clause
+= Spindle: Haskell-Nickel Configuration Parser
+:toc: macro
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
 
-*Note:* This directory is named `ada-loom-registry` but contains a Haskell project called "Spindle" - *not an Ada project*.
+[IMPORTANT]
+====
+*Repository Name Mismatch:* This repository is named `ada-loom-registry` but contains a Haskell project called *Spindle* -- it is NOT an Ada project, not a textile/loom project, and not a package registry.
+====
 
-== What is Spindle?
+toc::[]
 
-A Haskell-based tool for parsing and evaluating Nickel configuration files. It reads `.ncl` files, evaluates them, and converts them to Haskell types via JSON.
+== Overview
 
-== Technology Stack
+Spindle is a Haskell-based tool for parsing, evaluating, and converting https://nickel-lang.org/[Nickel] configuration files into type-safe Haskell data structures. It bridges the gap between Nickel's powerful contract-based configuration language and Haskell's type system.
 
-- *Language:* Haskell (GHC 9.12.2)
-- *Build System:* Cabal 2.2
-- *Key Dependencies:*
-  - `hnickel` - Nickel language integration
-  - `aeson` - JSON parsing
-  - `text` - Text handling
-  - `bytestring` - Binary data
+=== What Spindle Does
 
-== Usage
+[source]
+----
+ .ncl file    -->   Nickel Parser   -->   Evaluate   -->   JSON   -->   Haskell Types
+ (config.ncl)      (hnickel lib)        (contracts)      (Aeson)      (Config record)
+----
 
-```bash
+=== Key Features
+
+* *Type-Safe Configs* -- Nickel contracts + Haskell types = double validation
+* *Native Nickel* -- Uses `hnickel` for direct Nickel language integration
+* *JSON Bridge* -- Aeson-based conversion for interoperability
+* *WASM-Ready* -- GHC 9.6.3 supports `wasm32-wasi` compilation target
+
+== Quick Start
+
+=== Prerequisites
+
+* GHC 9.6.3+ (or 9.12.2 for latest features)
+* Cabal 2.2+
+* Nickel runtime (for config validation)
+
+=== Build and Run
+
+[source,bash]
+----
+# Build
 cabal build
-cabal run spindle -- path/to/config.ncl
-```
 
-== Configuration
+# Run with a Nickel config
+cabal run spindle -- config.ncl
 
-- `config.ncl` - Nickel configuration
-- `config.toml` - TOML configuration
-- `.gitlab-ci.yml` - CI/CD pipeline
+# Example output
+# Successfully parsed config: Config {name = "spindle-from-nickel", version = "2.0.0"}
+----
 
-== Purpose
+=== Example Configuration
 
-Processes Nickel configuration files to extract structured data (name, version) for use in Haskell applications.
+.config.ncl
+[source,nickel]
+----
+{
+  name = "spindle-from-nickel",
+  version = "2.0.0",
+}
+----
 
-== Status
+== Architecture
 
-- Version: 0.1.0.0
-- License: BSD-3-Clause
-- First version (see CHANGELOG.md)
+=== Core Pipeline
+
+.app/Main.hs
+[source,haskell]
+----
+-- 1. Parse the file into a Nickel expression
+expr <- parseNickelFile filename content
+
+-- 2. Evaluate the expression to get a Nickel value
+evaluatedValue <- eval expr
+
+-- 3. Convert the Nickel value to JSON
+let jsonValue = nvalueToJSON evaluatedValue
+
+-- 4. Decode JSON into Haskell types via Aeson
+eitherDecodeStrict' jsonValue
+----
+
+=== Type Definition
+
+[source,haskell]
+----
+data Config = Config
+  { name    :: Text
+  , version :: Text
+  }
+  deriving (Show, Generic, FromJSON)
+----
+
+=== Project Structure
+
+[source]
+----
+ada-loom-registry/              # Repository (misnamed)
++-- app/
+|   +-- Main.hs                 # CLI entry point & core logic
++-- config/
+|   +-- build.ncl               # Build configuration
+|   +-- ci.ncl                  # CI/CD pipeline config
+|   +-- dev.ncl                 # Development settings
+|   +-- deploy.ncl              # Deployment configuration
++-- config.ncl                  # Example Nickel config
++-- spindle.cabal               # Cabal package definition
++-- docs/
+|   +-- adr/                    # Architecture Decision Records
+|       +-- 0001-adopt-rhodium-standard.adoc
+|       +-- 0002-nickel-parser-integration.adoc
++-- .rhodium/                   # Compliance tracking
+    +-- compliance.json         # Rhodium Standard status
+    +-- WAIVER.adoc            # Active waivers
+----
+
+== Configuration System
+
+Spindle uses Nickel for its own configuration, demonstrating "eating your own dog food":
+
+=== Build Configuration
+
+.config/build.ncl (excerpt)
+[source,nickel]
+----
+{
+  project = {
+    name = "spindle",
+    version = "0.1.0",
+    license = "MIT OR Palimpsest-0.8.0",
+  },
+
+  haskell = {
+    version = "9.4.8",
+    compiler = "ghc",
+    build_tool = 'cabal,
+
+    settings = {
+      ghc_options = ["-Wall", "-Wcompat", "-Widentities", ...],
+      language_extensions = ["OverloadedStrings", "DeriveGeneric"],
+    },
+  },
+
+  nickel = {
+    version = "1.4.0",
+    use_for = ["parsing", "validation", "testing"],
+  },
+}
+----
+
+=== CI Configuration
+
+.config/ci.ncl (excerpt)
+[source,nickel]
+----
+{
+  pipeline = { name = "spindle-ci", version = "1.0.0" },
+
+  gitlab = {
+    stages = ["build", "test", "quality", "security", "docs", "deploy"],
+  },
+
+  test = {
+    unit = { enabled = true, command = "cabal test --enable-coverage" },
+    nickel_integration = { enabled = true, command = "cabal test nickel-integration" },
+  },
+}
+----
+
+== Dependencies
+
+=== Haskell Libraries
+
+[cols="1,3"]
+|===
+|Package |Purpose
+
+|`base` (>=4.7 && <5)
+|Standard library
+
+|`hnickel`
+|Nickel language integration (parser, evaluator)
+
+|`aeson`
+|JSON encoding/decoding
+
+|`text`
+|Efficient text handling
+
+|`bytestring`
+|Binary data / file reading
+|===
+
+=== Planned Additions
+
+* `optparse-applicative` -- CLI argument parsing
+* `filepath` / `directory` -- File system operations
+* `hspec` / `QuickCheck` -- Testing framework
+
+== WASM Compilation
+
+Spindle targets WASM deployment via GHC's native `wasm32-wasi` backend:
+
+[source,bash]
+----
+# Compile to WASM
+cabal build --with-ghc wasm32-wasi-ghc
+
+# Run in WASM runtime (wasmtime, wasmer, etc.)
+wasmtime spindle.wasm config.ncl
+----
+
+*Status:* Compile-tested; deployment deferred pending WASM runtime evaluation and Nickel FFI boundary testing.
+
+See: link:WASM_STATUS.adoc[WASM_STATUS.adoc]
+
+== Compliance
+
+This project follows *Rhodium Standard 0.5* targeting *Silver* level.
+
+=== Current Status
+
+[cols="1,1,2"]
+|===
+|Pillar |Level |Notes
+
+|Audit Grade
+|Bronze
+|SLSA attestation planned
+
+|Narratable
+|Silver
+|Documentation complete
+
+|Interoperable
+|Bronze
+|WASM + Nickel FFI testing pending
+
+|Inclusive
+|Bronze
+|MIT + Palimpsest dual license
+|===
+
+=== Nickel Advantage
+
+[NOTE]
+====
+This project *exceeds* Rhodium's typed configuration requirement by using Nickel natively as its configuration language, not just as a target format.
+====
+
+== Related Projects
+
+[cols="1,2,1"]
+|===
+|Project |Relationship |Priority
+
+|*scaffoldia*
+|Potential merger -- both Haskell + Nickel
+|HIGH
+
+|*valence*
+|Could use Spindle for Nickel config parsing
+|MEDIUM
+|===
+
+=== Merger Consideration
+
+There is a strong case for merging Spindle into `scaffoldia` as a Nickel parsing module:
+
+* Both are Haskell projects
+* Both integrate with Nickel
+* Reduces maintenance overhead
+* Spindle becomes a reusable library
 
 == Development
 
-The project appears to be in early development:
-- Placeholder author/maintainer information
-- GitHub URLs point to example repository
-- Minimal changelog entry
+=== Building
 
-== Recommendation
+[source,bash]
+----
+cabal update
+cabal build --enable-tests
+----
 
-*This project should be renamed* to reflect its actual purpose:
-- Current name: `ada-loom-registry` (misleading - not Ada, not a registry)
-- Suggested names:
-  - `spindle-nickel-parser`
-  - `nickel-config-tools`
-  - `spindle-haskell`
+=== Testing
+
+[source,bash]
+----
+cabal test --test-show-details=direct all
+----
+
+=== Linting
+
+[source,bash]
+----
+hlint app/
+----
+
+=== Using the Justfile
+
+[source,bash]
+----
+just build          # Build project
+just test           # Run tests
+just lint           # Run hlint
+----
+
+== Documentation
+
+|===
+|Document |Purpose
+
+|link:ROADMAP.adoc[ROADMAP.adoc]
+|Development phases and milestones
+
+|link:PROJECT_STATUS.adoc[PROJECT_STATUS.adoc]
+|Detailed status, blockers, implementation sequence
+
+|link:docs/adr/[docs/adr/]
+|Architecture Decision Records
+
+|link:CONTRIBUTING.adoc[CONTRIBUTING.adoc]
+|Contribution guidelines
+
+|link:SECURITY.adoc[SECURITY.adoc]
+|Security policy and considerations
+
+|link:REVERSIBILITY.adoc[REVERSIBILITY.adoc]
+|Rollback procedures
+|===
+
+== License
+
+BSD-3-Clause (see link:LICENSE.txt[LICENSE.txt])
+
+Additional terms: link:LICENSE-PALIMPSEST.txt[Palimpsest 0.8.0]
+
+== Status
+
+*Version:* 0.1.0.0 +
+*Implementation:* Early development (~15% complete) +
+*Documentation:* Complete (Rhodium Silver) +
+
+See link:ROADMAP.adoc[ROADMAP.adoc] for development plans.
 
 ---
-*Documentation added: 2025-11-20 during consolidation review*
+
+_Spindle -- Weaving Nickel configurations into Haskell types_
