@@ -55,6 +55,9 @@ __pycache__/
 /.stack-work/
 /dist-newstyle/
 
+# Spindle registry (local storage)
+/.spindle/
+
 # Chapel
 *.chpl.tmp.*
 
