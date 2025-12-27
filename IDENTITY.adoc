@@ -10,13 +10,14 @@
 |*Purpose* |Parse Nickel configuration files into type-safe Haskell data structures
 |*Language* |Haskell (GHC 9.6+)
 |*Key Dependency* |`hnickel` (Nickel language bindings)
+|*Features* |Config parsing, validation, local config registry
 |===
 
 == What This Project Is NOT
 
 * *NOT* an Ada programming language project
 * *NOT* related to textile looms or weaving
-* *NOT* a package registry of any kind
+* *NOT* a package registry (it has a local _config_ registry for managing validated configs)
 * *NOT* related to the repository name `ada-loom-registry`
 
 == Why The Confusing Repository Name?
@@ -48,7 +49,7 @@ The rename is pending because:
 If you found this repository and are confused:
 
 * *Looking for Ada code?* This isn't it.
-* *Looking for a registry?* This isn't it.
+* *Looking for a package registry?* This isn't it (but there is a config registry).
 * *Looking for a Nickel config parser in Haskell?* You're in the right place.
 
 See link:README.adoc[README.adoc] for usage instructions.

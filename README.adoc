@@ -25,7 +25,7 @@ This repository was created under a placeholder name before the project scope wa
 
 * *NOT* an Ada programming language project
 * *NOT* a textile/loom/weaving project
-* *NOT* a package registry
+* *NOT* a package registry (it has a _config_ registry, not a _package_ registry)
 
 The repository will be renamed to `spindle` or `spindle-nickel` in a future release. See <<repository-rename>> for details.
 ====
@@ -49,6 +49,7 @@ Spindle is a Haskell-based tool for parsing, evaluating, and converting https://
 * *Type-Safe Configs* -- Nickel contracts + Haskell types = double validation
 * *Native Nickel* -- Uses `hnickel` for direct Nickel language integration
 * *JSON Bridge* -- Aeson-based conversion for interoperability
+* *Config Registry* -- Store and manage validated configurations
 * *WASM-Ready* -- GHC 9.6.3 supports `wasm32-wasi` compilation target
 
 == Quick Start
@@ -83,6 +84,42 @@ cabal run spindle -- config.ncl
   version = "2.0.0",
 }
 ----
+
+== Registry
+
+Spindle includes a minimal registry for storing and managing validated Nickel configurations.
+
+=== Registry Commands
+
+[source,bash]
+----
+# Register a validated config
+spindle register config.ncl
+# Output: Registered: spindle-from-nickel v2.0.0
+
+# List all registered configs
+spindle list
+# Output:
+# Registered configs:
+# --------------------------------------------------
+# spindle-from-nickel v2.0.0 (config.ncl)
+
+# Get details of a specific config
+spindle get spindle-from-nickel
+# Output:
+# Name:       spindle-from-nickel
+# Version:    2.0.0
+# Source:     config.ncl
+# Registered: 2025-01-15 10:30:00 UTC
+
+# Remove a config from the registry
+spindle remove spindle-from-nickel
+# Output: Removed: spindle-from-nickel
+----
+
+=== Registry Storage
+
+The registry is stored locally in `.spindle/registry.json`. This file is JSON-formatted and can be version-controlled if desired.
 
 == Architecture
 
@@ -121,7 +158,11 @@ data Config = Config
 ----
 spindle/                        # (current repo: ada-loom-registry)
 +-- app/
-|   +-- Main.hs                 # CLI entry point & core logic
+|   +-- Main.hs                 # CLI entry point
++-- src/
+|   +-- Spindle.hs              # Public library API
+|   +-- Spindle/
+|       +-- Registry.hs         # Config registry module
 +-- config/
 |   +-- build.ncl               # Build configuration
 |   +-- ci.ncl                  # CI/CD pipeline config
@@ -131,11 +172,8 @@ spindle/                        # (current repo: ada-loom-registry)
 +-- spindle.cabal               # Cabal package definition
 +-- docs/
 |   +-- adr/                    # Architecture Decision Records
-|       +-- 0001-adopt-rhodium-standard.adoc
-|       +-- 0002-nickel-parser-integration.adoc
-+-- .rhodium/                   # Compliance tracking
-    +-- compliance.json         # Rhodium Standard status
-    +-- WAIVER.adoc            # Active waivers
++-- .spindle/                   # Local registry storage (gitignored)
+    +-- registry.json           # Registered configs
 ----
 
 == Configuration System
