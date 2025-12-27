@@ -1,13 +1,33 @@
 // SPDX-License-Identifier: BSD-3-Clause
-= Spindle: Haskell-Nickel Configuration Parser
+= Spindle
 :toc: macro
 :toclevels: 3
 :icons: font
 :source-highlighter: rouge
 
-[IMPORTANT]
+[.lead]
+*A Haskell library for parsing Nickel configuration files into type-safe data structures.*
+
+[cols="1,3"]
+|===
+|*Project Name* |Spindle
+|*What It Does* |Parses https://nickel-lang.org/[Nickel] configs → Haskell types via Aeson/JSON
+|*Language* |Haskell (GHC 9.6+)
+|*License* |BSD-3-Clause
+|*Status* |Early Development (~15% complete)
+|===
+
+[WARNING]
 ====
-*Repository Name Mismatch:* This repository is named `ada-loom-registry` but contains a Haskell project called *Spindle* -- it is NOT an Ada project, not a textile/loom project, and not a package registry.
+*Why is this repo called `ada-loom-registry`?*
+
+This repository was created under a placeholder name before the project scope was defined. The actual project is *Spindle*, a Haskell-Nickel configuration parser.
+
+* *NOT* an Ada programming language project
+* *NOT* a textile/loom/weaving project
+* *NOT* a package registry
+
+The repository will be renamed to `spindle` or `spindle-nickel` in a future release. See <<repository-rename>> for details.
 ====
 
 toc::[]
@@ -99,7 +119,7 @@ data Config = Config
 
 [source]
 ----
-ada-loom-registry/              # Repository (misnamed)
+spindle/                        # (current repo: ada-loom-registry)
 +-- app/
 |   +-- Main.hs                 # CLI entry point & core logic
 +-- config/
@@ -314,6 +334,9 @@ just lint           # Run hlint
 |===
 |Document |Purpose
 
+|link:IDENTITY.adoc[IDENTITY.adoc]
+|What this project is (and isn't) - explains the repo name
+
 |link:ROADMAP.adoc[ROADMAP.adoc]
 |Development phases and milestones
 
@@ -332,6 +355,33 @@ just lint           # Run hlint
 |link:REVERSIBILITY.adoc[REVERSIBILITY.adoc]
 |Rollback procedures
 |===
+
+[[repository-rename]]
+== Repository Rename
+
+This repository is currently named `ada-loom-registry` due to its origin as a placeholder project. A rename is planned:
+
+[cols="1,2"]
+|===
+|*Current Name* |`ada-loom-registry`
+|*Target Name* |`spindle` or `spindle-nickel`
+|*Timeline* |Phase 1 (before first stable release)
+|===
+
+=== Migration Path
+
+When the rename occurs:
+
+1. GitHub will automatically redirect the old URL
+2. All `git remote` URLs will need updating
+3. The `spindle.cabal` homepage/bug-reports URLs will be updated
+4. Hackage publication will use the new name
+
+=== Why Not Rename Now?
+
+* Existing CI/CD pipelines reference current name
+* Pending decision on merge with `scaffoldia` project
+* Want to ensure new name is permanent
 
 == License
 
