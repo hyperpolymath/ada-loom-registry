@@ -293,13 +293,28 @@ Decision point: Merge into scaffoldia or remain standalone?
 
 == Decision Points
 
+=== Repository Rename (PRIORITY)
+
+[IMPORTANT]
+====
+The current repository name `ada-loom-registry` does not reflect the project's purpose. See link:IDENTITY.adoc[IDENTITY.adoc] for full context.
+====
+
+[cols="1,3"]
+|===
+|*Current Name* |`ada-loom-registry`
+|*Proposed Names* |`spindle`, `spindle-nickel`, `haskell-nickel-parser`
+|*Decision Deadline* |Phase 1 completion
+|*Blocking Factor* |Scaffoldia merger decision
+|===
+
+*Recommended action:* Rename to `spindle` unless merger with scaffoldia is confirmed.
+
+=== Other Decisions
+
 [cols="1,2,2"]
 |===
 |Decision |Options |Deadline
-
-|Repository rename
-|`spindle-nickel-parser` vs keep `ada-loom-registry`
-|Phase 1
 
 |Merge with scaffoldia
 |Merge vs Standalone library
